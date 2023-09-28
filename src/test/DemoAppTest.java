@@ -18,11 +18,14 @@ import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.remote.AndroidMobileCapabilityType;
 import io.appium.java_client.remote.MobileCapabilityType;
 import pomClasses.CatalogPage;
+import pomClasses.ItemPage;
 
 public class DemoAppTest {
 
 	AppiumDriver androidDriver;
 	//AppiumDriver iphoneDriver;
+	
+	final String reviewMessage = "Thank you for submitting your review!";
 	
 	@BeforeTest
 	public void setup() {
@@ -119,4 +122,26 @@ public class DemoAppTest {
 	}
 	
 	//public void verifyCatalogSortingIphone()
+	
+	@Test
+	public void verifyItemRatingAndroid() {
+		CatalogPage catalogPage = new CatalogPage(androidDriver);
+		
+		// assert that message is displayed after tapping review star button on catalog page
+		catalogPage = catalogPage.tapReviewStarButton();
+		assertTrue(reviewMessage.compareTo(catalogPage.getReviewMessage()) == 0);
+		
+		catalogPage = catalogPage.tapCloseModalButton();
+		
+		// assert the same from the item page
+		ItemPage itemPage = catalogPage.tapItem();
+		itemPage = itemPage.tapReviewStarButton();
+		assertTrue(reviewMessage.compareTo(itemPage.getReviewMessage()) == 0);
+		
+		itemPage = itemPage.tapCloseModalButton();
+		
+		// return to catalog page
+		itemPage = itemPage.tapOpenMenuButton();
+		itemPage.tapCatalogMenuItem();
+	}
 }

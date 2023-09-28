@@ -27,6 +27,7 @@ public class CatalogPage {
 
 	AppiumDriver driver;
 	
+	final String itemXpath = "(//android.view.ViewGroup[@content-desc=\"store item\"])[1]/android.view.ViewGroup[1]/android.widget.ImageView";
 	final String itemTextListXpath = "//android.widget.TextView[@content-desc=\"store item text\"]";
 	final String itemPriceListXpath = "(//android.widget.TextView[@content-desc=\"store item price\"])";
 	final String nameAscSortButtonXpath = "//android.view.ViewGroup[@content-desc=\"nameAsc\"]/android.widget.TextView";
@@ -35,7 +36,14 @@ public class CatalogPage {
 	final String priceDescSortButtonXpath = "//android.view.ViewGroup[@content-desc=\"priceDesc\"]/android.widget.TextView[2]";
 	final String endOfPageElementXpath = "//android.view.ViewGroup[@content-desc=\"products screen\"]"
 			+ "/android.widget.ScrollView/android.view.ViewGroup/android.view.ViewGroup[4]/android.widget.TextView";
+	final String reviewStarButtonXpath = "(//android.view.ViewGroup[@content-desc=\"review star 2\"])[1]/android.widget.TextView";
+	final String closeModalButtonXpath = "//android.view.ViewGroup[@content-desc=\"Close Modal button\"]";
+	final String reviewMessageElementXpath = "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget"
+			+ ".FrameLayout/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup"
+			+ "/android.view.ViewGroup/android.widget.TextView";
 	
+	@FindBy(xpath = itemXpath)
+	private WebElement item;
 	@FindBy(xpath = "//android.view.ViewGroup[@content-desc=\"sort button\"]/android.widget.ImageView")
 	private WebElement sortButton;
 	@FindBy(xpath = nameAscSortButtonXpath)
@@ -46,13 +54,23 @@ public class CatalogPage {
 	private WebElement priceAscSortButton;
 	@FindBy(xpath = priceDescSortButtonXpath)
 	private WebElement priceDescSortButton;
-	@FindBy(xpath = "(//android.view.ViewGroup[@content-desc=\"review star 2\"])[1]/android.widget.TextView")
+	@FindBy(xpath = reviewStarButtonXpath)
 	private WebElement reviewStarButton;
-	
+	@FindBy(xpath = closeModalButtonXpath)
+	private WebElement closeModalButton;
+	@FindBy(xpath = reviewMessageElementXpath)
+	private WebElement reviewMessageElement;	
 	
 	public CatalogPage(AppiumDriver driver) {
 		this.driver = driver;
 		PageFactory.initElements(driver, this);
+	}
+	
+	public ItemPage tapItem() {
+		new WebDriverWait(driver, Duration.ofSeconds(15))
+		.until(ExpectedConditions.presenceOfElementLocated(By.xpath(itemXpath)));
+		item.click();
+		return new ItemPage(driver);
 	}
 	
 	public CatalogPage tapSortButton() {
@@ -86,6 +104,26 @@ public class CatalogPage {
 		.until(ExpectedConditions.presenceOfElementLocated(By.xpath(priceDescSortButtonXpath)));
 		priceDescSortButton.click();
 		return new CatalogPage(driver);
+	}
+	
+	public CatalogPage tapReviewStarButton() {
+		new WebDriverWait(driver, Duration.ofSeconds(15))
+		.until(ExpectedConditions.presenceOfElementLocated(By.xpath(reviewStarButtonXpath)));
+		reviewStarButton.click();
+		return new CatalogPage(driver);
+	}
+	
+	public CatalogPage tapCloseModalButton() {
+		new WebDriverWait(driver, Duration.ofSeconds(15))
+		.until(ExpectedConditions.presenceOfElementLocated(By.xpath(closeModalButtonXpath)));
+		closeModalButton.click();
+		return new CatalogPage(driver);
+	}
+	
+	public String getReviewMessage() {
+		new WebDriverWait(driver, Duration.ofSeconds(15))
+		.until(ExpectedConditions.presenceOfElementLocated(By.xpath(reviewMessageElementXpath)));
+		return reviewMessageElement.getText();
 	}
 	
 	public Set<String> getItemTextSet() {		 
