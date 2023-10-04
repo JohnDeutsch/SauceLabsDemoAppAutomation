@@ -28,6 +28,7 @@ public class CatalogPage {
 	AppiumDriver driver;
 	
 	final String itemXpath = "(//android.view.ViewGroup[@content-desc=\"store item\"])[1]/android.view.ViewGroup[1]/android.widget.ImageView";
+	final String sortButtonXpath = "//android.view.ViewGroup[@content-desc=\"sort button\"]/android.widget.ImageView";
 	final String itemTextListXpath = "//android.widget.TextView[@content-desc=\"store item text\"]";
 	final String itemPriceListXpath = "(//android.widget.TextView[@content-desc=\"store item price\"])";
 	final String nameAscSortButtonXpath = "//android.view.ViewGroup[@content-desc=\"nameAsc\"]/android.widget.TextView";
@@ -44,7 +45,7 @@ public class CatalogPage {
 	
 	@FindBy(xpath = itemXpath)
 	private WebElement item;
-	@FindBy(xpath = "//android.view.ViewGroup[@content-desc=\"sort button\"]/android.widget.ImageView")
+	@FindBy(xpath = sortButtonXpath)
 	private WebElement sortButton;
 	@FindBy(xpath = nameAscSortButtonXpath)
 	private WebElement nameAscSortButton;
@@ -74,6 +75,8 @@ public class CatalogPage {
 	}
 	
 	public CatalogPage tapSortButton() {
+		new WebDriverWait(driver, Duration.ofSeconds(15))
+		.until(ExpectedConditions.presenceOfElementLocated(By.xpath(sortButtonXpath)));
 		sortButton.click();
 		return new CatalogPage(driver);
 	}

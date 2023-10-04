@@ -17,6 +17,7 @@ import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.remote.AndroidMobileCapabilityType;
 import io.appium.java_client.remote.MobileCapabilityType;
+import pomClasses.CartPage;
 import pomClasses.CatalogPage;
 import pomClasses.ItemPage;
 
@@ -26,6 +27,8 @@ public class DemoAppTest {
 	//AppiumDriver iphoneDriver;
 	
 	final String reviewMessage = "Thank you for submitting your review!";
+	final String itemLabel = "Sauce Labs Backpack";
+	final int itemAmount = 1;
 	
 	@BeforeTest
 	public void setup() {
@@ -42,7 +45,7 @@ public class DemoAppTest {
 		}
 	}
 	
-	// End every test on the Catalog page (scrolled up)
+	// End every test on the Catalog page (scrolled up) with the state reset
 	
 	@Test
 	public void verifyCatalogSortingAndroid() {
@@ -143,5 +146,22 @@ public class DemoAppTest {
 		// return to catalog page
 		itemPage = itemPage.tapOpenMenuButton();
 		itemPage.tapCatalogMenuItem();
+	}
+	
+	@Test
+	public void verifyAddToCartAndroid() {
+		CatalogPage catalogPage = new CatalogPage(androidDriver);
+		ItemPage itemPage = catalogPage.tapItem();
+		itemPage.tapAddToCartButton();
+		CartPage cartPage = itemPage.tapCartButton();
+		
+		// assert that item label and amount are correct
+		assertTrue(itemLabel.compareTo(cartPage.getItemLabel()) == 0);
+		assertTrue(itemAmount == cartPage.getItemAmount());
+		
+		// reset the app state
+		cartPage = cartPage.tapRemoveItemButton();
+		cartPage = cartPage.tapOpenMenuButton();
+		catalogPage = cartPage.tapCatalogMenuItem();
 	}
 }

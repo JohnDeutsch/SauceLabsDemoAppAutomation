@@ -20,7 +20,10 @@ public class ItemPage {
 	final String reviewMessageElementXpath = "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget"
 			+ ".FrameLayout/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup"
 			+ "/android.view.ViewGroup/android.widget.TextView";
+	final String openMenuButtonXpath = "//android.view.ViewGroup[@content-desc=\"open menu\"]/android.widget.ImageView";
 	final String catalogMenuItemXpath = "//android.view.ViewGroup[@content-desc=\"menu item catalog\"]";
+	final String addToCartButtonXpath = "//android.view.ViewGroup[@content-desc=\"Add To Cart button\"]";
+	final String cartButtonXpath = "//android.view.ViewGroup[@content-desc=\"cart badge\"]/android.widget.TextView";
 	
 	@FindBy(xpath = reviewStarButtonXpath)
 	private WebElement reviewStarButton;
@@ -28,10 +31,14 @@ public class ItemPage {
 	private WebElement closeModalButton;
 	@FindBy(xpath = reviewMessageElementXpath)
 	private WebElement reviewMessageElement;
-	@FindBy(xpath = "//android.view.ViewGroup[@content-desc=\"open menu\"]/android.widget.ImageView")
+	@FindBy(xpath = openMenuButtonXpath)
 	private WebElement openMenuButton;
 	@FindBy(xpath = catalogMenuItemXpath)
 	private WebElement catalogMenuItem;
+	@FindBy(xpath = addToCartButtonXpath)
+	private WebElement addToCartButton;
+	@FindBy(xpath = cartButtonXpath)
+	private WebElement cartButton;
 	
 	public ItemPage(AppiumDriver driver) {
 		this.driver = driver;
@@ -59,6 +66,8 @@ public class ItemPage {
 	}
 	
 	public ItemPage tapOpenMenuButton() {
+		new WebDriverWait(driver, Duration.ofSeconds(15))
+		.until(ExpectedConditions.presenceOfElementLocated(By.xpath(openMenuButtonXpath)));
 		openMenuButton.click();
 		return new ItemPage(driver);
 	}
@@ -68,5 +77,18 @@ public class ItemPage {
 		.until(ExpectedConditions.presenceOfElementLocated(By.xpath(catalogMenuItemXpath)));
 		catalogMenuItem.click();
 		return new CatalogPage(driver);
+	}
+	
+	public void tapAddToCartButton() {
+		new WebDriverWait(driver, Duration.ofSeconds(15))
+		.until(ExpectedConditions.presenceOfElementLocated(By.xpath(addToCartButtonXpath)));
+		addToCartButton.click();
+	}
+	
+	public CartPage tapCartButton() {
+		new WebDriverWait(driver, Duration.ofSeconds(15))
+		.until(ExpectedConditions.presenceOfElementLocated(By.xpath(cartButtonXpath)));
+		cartButton.click();
+		return new CartPage(driver);
 	}
 }
