@@ -25,6 +25,8 @@ public class ItemPage {
 	final String addToCartButtonXpath = "//android.view.ViewGroup[@content-desc=\"Add To Cart button\"]";
 	final String cartButtonXpath = "//android.view.ViewGroup[@content-desc=\"cart badge\"]/android.widget.TextView";
 	final String blueColorButtonXpath = "//android.view.ViewGroup[@content-desc=\"blue circle\"]/android.view.ViewGroup"; 
+	final String plusButtonXpath = "//android.view.ViewGroup[@content-desc=\"counter plus button\"]/android.widget.ImageView";
+	final String itemAmountXpath = "//android.view.ViewGroup[@content-desc=\"counter amount\"]/android.widget.TextView"; 
 	
 	@FindBy(xpath = reviewStarButtonXpath)
 	private WebElement reviewStarButton;
@@ -42,6 +44,10 @@ public class ItemPage {
 	private WebElement cartButton;
 	@FindBy(xpath = blueColorButtonXpath)
 	private WebElement blueColorButton;
+	@FindBy(xpath = plusButtonXpath)
+	private WebElement plusButton;
+	@FindBy(xpath = itemAmountXpath)
+	private WebElement itemAmount;
 	
 	public ItemPage(AppiumDriver driver) {
 		this.driver = driver;
@@ -99,5 +105,17 @@ public class ItemPage {
 		new WebDriverWait(driver, Duration.ofSeconds(15))
 		.until(ExpectedConditions.presenceOfElementLocated(By.xpath(blueColorButtonXpath)));
 		blueColorButton.click();
+	}
+	
+	public void tapPlusButton() {
+		new WebDriverWait(driver, Duration.ofSeconds(15))
+		.until(ExpectedConditions.presenceOfElementLocated(By.xpath(blueColorButtonXpath)));
+		plusButton.click();
+	}
+	
+	public int getItemAmount() {
+		new WebDriverWait(driver, Duration.ofSeconds(15))
+		.until(ExpectedConditions.presenceOfElementLocated(By.xpath(itemAmountXpath)));
+		return Integer.parseInt(itemAmount.getText());
 	}
 }

@@ -23,6 +23,7 @@ public class CartPage {
 	final String openMenuButtonXpath = "//android.view.ViewGroup[@content-desc=\"open menu\"]/android.widget.ImageView";
 	final String catalogMenuItemXpath = "//android.view.ViewGroup[@content-desc=\"menu item catalog\"]";
 	final String blueCircleXpath = "//android.view.ViewGroup[@content-desc=\"blue circle\"]";
+	final String minusButtonXpath = "//android.view.ViewGroup[@content-desc=\"counter minus button\"]/android.widget.ImageView";
 	
 	@FindBy(xpath = itemLabelXpath)
 	private WebElement itemLabel;
@@ -38,6 +39,8 @@ public class CartPage {
 	private WebElement catalogMenuItem;
 	@FindBy(xpath = blueCircleXpath)
 	private WebElement blueCircle;
+	@FindBy(xpath = minusButtonXpath)
+	private WebElement minusButton;
 	
 	public CartPage(AppiumDriver driver) {
 		this.driver = driver;
@@ -88,5 +91,11 @@ public class CartPage {
 		new WebDriverWait(driver, Duration.ofSeconds(15))
 		.until(ExpectedConditions.presenceOfElementLocated(By.xpath(blueCircleXpath)));
 		return blueCircle.getAttribute("content-desc");
+	}
+	
+	public void tapMinusButton() {
+		new WebDriverWait(driver, Duration.ofSeconds(15))
+		.until(ExpectedConditions.presenceOfElementLocated(By.xpath(minusButtonXpath)));
+		minusButton.click();
 	}
 }

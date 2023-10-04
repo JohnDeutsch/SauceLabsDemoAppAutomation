@@ -28,8 +28,11 @@ public class DemoAppTest {
 	
 	final String reviewMessage = "Thank you for submitting your review!";
 	final String itemLabel = "Sauce Labs Backpack";
-	final int itemAmount = 1;
+	final int addToCartTestItemAmount = 1;
 	final String itemColorContentDesc = "blue circle";
+	final int itemAmountTestItemAmount1 = 2;
+	final int itemAmountTestItemAmount2 = 2;
+	final int itemAmountTestItemAmount3 = 1;
 	
 	@BeforeTest
 	public void setup() {
@@ -122,7 +125,10 @@ public class DemoAppTest {
 		}
 		assertTrue(isSorted);
 		
+		// reset the app state
 		catalogPage.scrollToTop();
+		catalogPage = catalogPage.tapSortButton();
+		catalogPage = catalogPage.tapNameAscSortButton();
 	}
 	
 	//public void verifyCatalogSortingIphone()
@@ -144,7 +150,7 @@ public class DemoAppTest {
 		
 		itemPage = itemPage.tapCloseModalButton();
 		
-		// return to catalog page
+		// reset the app state
 		itemPage = itemPage.tapOpenMenuButton();
 		itemPage.tapCatalogMenuItem();
 	}
@@ -158,12 +164,12 @@ public class DemoAppTest {
 		
 		// assert that item label and amount are correct
 		assertTrue(itemLabel.compareTo(cartPage.getItemLabel()) == 0);
-		assertTrue(itemAmount == cartPage.getItemAmount());
+		assertTrue(addToCartTestItemAmount == cartPage.getItemAmount());
 		
 		// reset the app state
 		cartPage = cartPage.tapRemoveItemButton();
 		cartPage = cartPage.tapOpenMenuButton();
-		catalogPage = cartPage.tapCatalogMenuItem();
+		cartPage.tapCatalogMenuItem();
 	}
 
 	@Test
@@ -179,6 +185,29 @@ public class DemoAppTest {
 		// reset the app state
 		cartPage = cartPage.tapRemoveItemButton();
 		cartPage = cartPage.tapOpenMenuButton();
-		catalogPage = cartPage.tapCatalogMenuItem();
+		cartPage.tapCatalogMenuItem();
+	}
+	
+	@Test
+	public void verifyItemAmountAndroid() {
+		// assert that the plus button updates the item amount on the item page
+		CatalogPage catalogPage = new CatalogPage(androidDriver);
+		ItemPage itemPage = catalogPage.tapItem();
+		itemPage.tapPlusButton();
+		assertTrue(itemAmountTestItemAmount1 == itemPage.getItemAmount());
+		
+		// assert that the cart page item amount is updated correctly
+		itemPage.tapAddToCartButton();
+		CartPage cartPage = itemPage.tapCartButton();
+		assertTrue(itemAmountTestItemAmount2 == cartPage.getItemAmount());
+		
+		// assert that the minus button updates the item amount on the cart page
+		cartPage.tapMinusButton();
+		assertTrue(itemAmountTestItemAmount3 == cartPage.getItemAmount());
+		
+		// reset the app state
+		cartPage = cartPage.tapRemoveItemButton();
+		cartPage = cartPage.tapOpenMenuButton();
+		cartPage.tapCatalogMenuItem();
 	}
 }
