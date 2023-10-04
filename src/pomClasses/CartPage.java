@@ -22,6 +22,7 @@ public class CartPage {
 	final String proceedButtonXpath = "//android.view.ViewGroup[@content-desc=\"Proceed To Checkout button\"]";
 	final String openMenuButtonXpath = "//android.view.ViewGroup[@content-desc=\"open menu\"]/android.widget.ImageView";
 	final String catalogMenuItemXpath = "//android.view.ViewGroup[@content-desc=\"menu item catalog\"]";
+	final String blueCircleXpath = "//android.view.ViewGroup[@content-desc=\"blue circle\"]";
 	
 	@FindBy(xpath = itemLabelXpath)
 	private WebElement itemLabel;
@@ -35,6 +36,8 @@ public class CartPage {
 	private WebElement openMenuButton;
 	@FindBy(xpath = catalogMenuItemXpath)
 	private WebElement catalogMenuItem;
+	@FindBy(xpath = blueCircleXpath)
+	private WebElement blueCircle;
 	
 	public CartPage(AppiumDriver driver) {
 		this.driver = driver;
@@ -79,5 +82,11 @@ public class CartPage {
 		.until(ExpectedConditions.presenceOfElementLocated(By.xpath(catalogMenuItemXpath)));
 		catalogMenuItem.click();
 		return new CatalogPage(driver);
+	}
+	
+	public String getBlueCircleContentDesc() {
+		new WebDriverWait(driver, Duration.ofSeconds(15))
+		.until(ExpectedConditions.presenceOfElementLocated(By.xpath(blueCircleXpath)));
+		return blueCircle.getAttribute("content-desc");
 	}
 }

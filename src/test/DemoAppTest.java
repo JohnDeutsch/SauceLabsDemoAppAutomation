@@ -29,6 +29,7 @@ public class DemoAppTest {
 	final String reviewMessage = "Thank you for submitting your review!";
 	final String itemLabel = "Sauce Labs Backpack";
 	final int itemAmount = 1;
+	final String itemColorContentDesc = "blue circle";
 	
 	@BeforeTest
 	public void setup() {
@@ -158,6 +159,22 @@ public class DemoAppTest {
 		// assert that item label and amount are correct
 		assertTrue(itemLabel.compareTo(cartPage.getItemLabel()) == 0);
 		assertTrue(itemAmount == cartPage.getItemAmount());
+		
+		// reset the app state
+		cartPage = cartPage.tapRemoveItemButton();
+		cartPage = cartPage.tapOpenMenuButton();
+		catalogPage = cartPage.tapCatalogMenuItem();
+	}
+
+	@Test
+	public void verifyChangingColorAndroid() {
+		// change color to blue in item page and assert that it is reflected on the cart page
+		CatalogPage catalogPage = new CatalogPage(androidDriver);
+		ItemPage itemPage = catalogPage.tapItem();
+		itemPage.tapBlueColorButton();
+		itemPage.tapAddToCartButton();
+		CartPage cartPage = itemPage.tapCartButton();
+		assertTrue(itemColorContentDesc.compareTo(cartPage.getBlueCircleContentDesc()) == 0);
 		
 		// reset the app state
 		cartPage = cartPage.tapRemoveItemButton();

@@ -24,6 +24,7 @@ public class ItemPage {
 	final String catalogMenuItemXpath = "//android.view.ViewGroup[@content-desc=\"menu item catalog\"]";
 	final String addToCartButtonXpath = "//android.view.ViewGroup[@content-desc=\"Add To Cart button\"]";
 	final String cartButtonXpath = "//android.view.ViewGroup[@content-desc=\"cart badge\"]/android.widget.TextView";
+	final String blueColorButtonXpath = "//android.view.ViewGroup[@content-desc=\"blue circle\"]/android.view.ViewGroup"; 
 	
 	@FindBy(xpath = reviewStarButtonXpath)
 	private WebElement reviewStarButton;
@@ -39,6 +40,8 @@ public class ItemPage {
 	private WebElement addToCartButton;
 	@FindBy(xpath = cartButtonXpath)
 	private WebElement cartButton;
+	@FindBy(xpath = blueColorButtonXpath)
+	private WebElement blueColorButton;
 	
 	public ItemPage(AppiumDriver driver) {
 		this.driver = driver;
@@ -90,5 +93,11 @@ public class ItemPage {
 		.until(ExpectedConditions.presenceOfElementLocated(By.xpath(cartButtonXpath)));
 		cartButton.click();
 		return new CartPage(driver);
+	}
+	
+	public void tapBlueColorButton() {
+		new WebDriverWait(driver, Duration.ofSeconds(15))
+		.until(ExpectedConditions.presenceOfElementLocated(By.xpath(blueColorButtonXpath)));
+		blueColorButton.click();
 	}
 }
