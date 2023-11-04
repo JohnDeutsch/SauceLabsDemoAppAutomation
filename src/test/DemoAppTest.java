@@ -20,6 +20,7 @@ import io.appium.java_client.remote.MobileCapabilityType;
 import pomClasses.CartPage;
 import pomClasses.CatalogPage;
 import pomClasses.ItemPage;
+import pomClasses.LoginPage;
 
 public class DemoAppTest {
 
@@ -209,5 +210,32 @@ public class DemoAppTest {
 		cartPage = cartPage.tapRemoveItemButton();
 		cartPage = cartPage.tapOpenMenuButton();
 		cartPage.tapCatalogMenuItem();
+	}
+	
+	@Test
+	public void verifyLoginAndroid() {
+		// assert that logging in with valid credentials works
+		CatalogPage catalogPage = new CatalogPage(androidDriver);
+		catalogPage = catalogPage.tapOpenMenuButton();
+		LoginPage loginPage = catalogPage.tapLoginMenuItem();
+		loginPage.tapValidAutofill();
+		catalogPage = loginPage.tapLoginButton();
+		assertTrue(catalogPage.topOfPageElementExists());
+		
+		// assert that logging out works
+		catalogPage = catalogPage.tapOpenMenuButton();
+		catalogPage = catalogPage.tapLogoutMenuItem();
+		loginPage = catalogPage.tapLogoutAcceptButton();
+		assertTrue(loginPage.logoutSuccessMessageExists());	
+		loginPage = loginPage.tapLogoutSuccessAcceptButton();
+		
+		// assert that logging in with invalid credentials gives error message
+		loginPage = loginPage.tapInvalidAutofill();
+		loginPage.tapLoginButton();
+		assertTrue(loginPage.errorMessageExists());
+		
+		// reset the app state
+		loginPage = loginPage.tapOpenMenuButton();
+		catalogPage = loginPage.tapCatalogMenuItem();
 	}
 }

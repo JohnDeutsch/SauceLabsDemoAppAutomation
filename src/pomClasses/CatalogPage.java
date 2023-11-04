@@ -42,6 +42,12 @@ public class CatalogPage {
 	final String reviewMessageElementXpath = "/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget"
 			+ ".FrameLayout/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup"
 			+ "/android.view.ViewGroup/android.widget.TextView";
+	final String openMenuButtonXpath = "//android.view.ViewGroup[@content-desc=\"open menu\"]/android.widget.ImageView"; 
+	final String loginMenuItemXpath = "//android.view.ViewGroup[@content-desc=\"menu item log in\"]";
+	final String topOfPageElementXpath = "//android.view.ViewGroup[@content-desc=\"container header\"]/android.widget.TextView";
+	final String logoutMenuItemXpath = "//android.view.ViewGroup[@content-desc=\"menu item log out\"]";
+	final String logoutAcceptButtonXpath = "/hierarchy/android.widget.FrameLayout/android.widget.FrameLayout/android.widget.FrameLayout"
+			+ "/android.widget.LinearLayout/android.widget.ScrollView/android.widget.LinearLayout/android.widget.Button[2]";
 	
 	@FindBy(xpath = itemXpath)
 	private WebElement item;
@@ -61,6 +67,16 @@ public class CatalogPage {
 	private WebElement closeModalButton;
 	@FindBy(xpath = reviewMessageElementXpath)
 	private WebElement reviewMessageElement;	
+	@FindBy(xpath = openMenuButtonXpath)
+	private WebElement openMenuButton;
+	@FindBy(xpath = loginMenuItemXpath)
+	private WebElement loginMenuItem;
+	@FindBy(xpath = topOfPageElementXpath)
+	private List<WebElement> topOfPageElement;
+	@FindBy(xpath = logoutMenuItemXpath)
+	private WebElement logoutMenuItem;
+	@FindBy(xpath = logoutAcceptButtonXpath)
+	private WebElement logoutAcceptButton;
 	
 	public CatalogPage(AppiumDriver driver) {
 		this.driver = driver;
@@ -127,6 +143,40 @@ public class CatalogPage {
 		new WebDriverWait(driver, Duration.ofSeconds(15))
 		.until(ExpectedConditions.presenceOfElementLocated(By.xpath(reviewMessageElementXpath)));
 		return reviewMessageElement.getText();
+	}
+	
+	public CatalogPage tapOpenMenuButton() {
+		new WebDriverWait(driver, Duration.ofSeconds(15))
+		.until(ExpectedConditions.presenceOfElementLocated(By.xpath(openMenuButtonXpath)));
+		openMenuButton.click();
+		return new CatalogPage(driver);
+	}
+	
+	public LoginPage tapLoginMenuItem() {
+		new WebDriverWait(driver, Duration.ofSeconds(15))
+		.until(ExpectedConditions.presenceOfElementLocated(By.xpath(loginMenuItemXpath)));
+		loginMenuItem.click();
+		return new LoginPage(driver);
+	}
+	
+	public CatalogPage tapLogoutMenuItem() {
+		new WebDriverWait(driver, Duration.ofSeconds(15))
+		.until(ExpectedConditions.presenceOfElementLocated(By.xpath(logoutMenuItemXpath)));
+		logoutMenuItem.click();
+		return new CatalogPage(driver);
+	}
+	
+	public LoginPage tapLogoutAcceptButton() {
+		new WebDriverWait(driver, Duration.ofSeconds(15))
+		.until(ExpectedConditions.presenceOfElementLocated(By.xpath(logoutAcceptButtonXpath)));
+		logoutAcceptButton.click();
+		return new LoginPage(driver);
+	}
+	
+	public boolean topOfPageElementExists() {
+		new WebDriverWait(driver, Duration.ofSeconds(15))
+		.until(ExpectedConditions.presenceOfElementLocated(By.xpath(topOfPageElementXpath)));
+		return topOfPageElement.size() > 0;
 	}
 	
 	public Set<String> getItemTextSet() {		 
@@ -207,8 +257,7 @@ public class CatalogPage {
 	public void scrollToTop() {
 		boolean topOfPage = false;
 		while (!topOfPage) {
-			List<WebElement> topOfPageElement = driver.findElements(By.xpath("//android.view.ViewGroup[@content-desc=\"container header\"]"
-					+ "/android.widget.TextView"));
+			List<WebElement> topOfPageElement = driver.findElements(By.xpath(topOfPageElementXpath));
 			if (topOfPageElement.size() > 0) {
 				topOfPage = true;
 				break;
