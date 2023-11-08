@@ -19,8 +19,12 @@ import io.appium.java_client.remote.AndroidMobileCapabilityType;
 import io.appium.java_client.remote.MobileCapabilityType;
 import pomClasses.CartPage;
 import pomClasses.CatalogPage;
+import pomClasses.CheckoutCompletePage;
+import pomClasses.CheckoutPage;
 import pomClasses.ItemPage;
 import pomClasses.LoginPage;
+import pomClasses.OrderReviewPage;
+import pomClasses.PaymentPage;
 
 public class DemoAppTest {
 
@@ -34,6 +38,22 @@ public class DemoAppTest {
 	final int itemAmountTestItemAmount1 = 2;
 	final int itemAmountTestItemAmount2 = 2;
 	final int itemAmountTestItemAmount3 = 1;
+	final String name = "Rebecca Winter";
+	final String address1 = "Mandorley 112";
+	final String address2 = "Entrance 1";
+	final String city = "Truro";
+	final String state = "Cornwall";
+	final String zip = "89750";
+	final String country = "United Kingdom";
+	final String cardNumber = "325812657568789";
+	final String expDate = "0325";
+	final String securityCode = "123";
+	final String productLabel = "Sauce Labs Backpack";
+	final String deliveryAddress = "Mandorley 112, Entrance 1";
+	final String deliveryCityState = "Truro, Cornwall";
+	final String deliveryCountryZip = "United Kingdom, 89750";
+	final String paymentCardNumber = "3258 1265 7568 789";
+	final String totalPrice = "$35.98";
 	
 	@BeforeTest
 	public void setup() {
@@ -237,5 +257,61 @@ public class DemoAppTest {
 		// reset the app state
 		loginPage = loginPage.tapOpenMenuButton();
 		catalogPage = loginPage.tapCatalogMenuItem();
+	}
+
+	@Test
+	public void verifyPurchaseAndroid() {
+		// log in
+		CatalogPage catalogPage = new CatalogPage(androidDriver);
+		catalogPage = catalogPage.tapOpenMenuButton();
+		LoginPage loginPage = catalogPage.tapLoginMenuItem();
+		loginPage.tapValidAutofill();
+		catalogPage = loginPage.tapLoginButton();
+		
+		// assert that checkout page input successfully leads to payment page
+		ItemPage itemPage = catalogPage.tapItem();
+		itemPage.tapAddToCartButton();
+		CartPage cartPage = itemPage.tapCartButton();
+		CheckoutPage checkoutPage = cartPage.tapProceedButton();
+		checkoutPage.setNameField(name);
+		checkoutPage.setAddress1Field(address1);
+		checkoutPage.setAddress2Field(address2);
+		checkoutPage.setCityField(city);
+		checkoutPage.setStateField(state);
+		checkoutPage.setZipField(zip);
+		checkoutPage.setCountryField(country);
+		PaymentPage paymentPage = checkoutPage.tapPaymentButton();
+		assertTrue(paymentPage.topOfPageElementExists());
+		
+		// assert that payment page input successfully leads to order review page
+		paymentPage.setNameField(name);
+		paymentPage.setCardNumberField(cardNumber);
+		paymentPage.setExpDateField(expDate);
+		paymentPage.setSecurityCodeField(securityCode);
+		OrderReviewPage orderReviewPage = paymentPage.tapReviewOrderButton();
+		assertTrue(orderReviewPage.topOfPageElementExists());
+		
+		// assert that all data is correct on order review page
+		assertTrue(orderReviewPage.getProductLabel().compareTo(productLabel) == 0);
+		assertTrue(orderReviewPage.getDeliveryName().compareTo(name) == 0);
+		assertTrue(orderReviewPage.getDeliveryAddress().compareTo(deliveryAddress) == 0);
+		assertTrue(orderReviewPage.getDeliveryCityState().compareTo(deliveryCityState) == 0);
+		assertTrue(orderReviewPage.getDeliveryCountryZip().compareTo(deliveryCountryZip) == 0);
+		assertTrue(orderReviewPage.getPaymentName().compareTo(name) == 0);
+		assertTrue(orderReviewPage.getPaymentCardNumber().compareTo(paymentCardNumber) == 0);
+		assertTrue(orderReviewPage.getTotalPrice().compareTo(totalPrice) == 0);
+		
+		// assert that order review page successfully leads to checkout complete page
+		CheckoutCompletePage checkoutCompletePage = orderReviewPage.tapPlaceOrderButton();
+		assertTrue(checkoutCompletePage.topOfPageElementExists());
+		
+		// reset the app state
+		catalogPage = checkoutCompletePage.tapContinueShoppingButton();
+		catalogPage = catalogPage.tapOpenMenuButton();
+		catalogPage = catalogPage.tapLogoutMenuItem();
+		loginPage = catalogPage.tapLogoutAcceptButton();
+		loginPage = loginPage.tapLogoutSuccessAcceptButton();
+		loginPage = loginPage.tapOpenMenuButton();
+		loginPage.tapCatalogMenuItem();
 	}
 }

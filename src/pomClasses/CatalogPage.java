@@ -146,7 +146,7 @@ public class CatalogPage {
 	}
 	
 	public CatalogPage tapOpenMenuButton() {
-		new WebDriverWait(driver, Duration.ofSeconds(15))
+		new WebDriverWait(driver, Duration.ofSeconds(20))
 		.until(ExpectedConditions.presenceOfElementLocated(By.xpath(openMenuButtonXpath)));
 		openMenuButton.click();
 		return new CatalogPage(driver);
